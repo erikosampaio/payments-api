@@ -5,11 +5,16 @@ default: &default
 
 development:
   <<: *default
-  database: payments_api_development
+  host: <%= ENV['PG_HOST'] %>
+  database: app_payment
+  username: <%= ENV['PG_USERNAME'] %>
+  password: <%= ENV['PG_PASSWORD'] %>
 
 test:
   <<: *default
-  database: payments_api_test
+  database: app_payment_test
+  username: <%= ENV['PG_USERNAME'] %>
+  password: <%= ENV['PG_PASSWORD'] %>
 
 production:
   <<: *default
