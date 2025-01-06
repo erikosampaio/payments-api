@@ -16,6 +16,7 @@ module Orchestrators
       end
 
       private
+
       def select_integration(provider)
         raise(NotImplementedError)
       end

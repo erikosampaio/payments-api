@@ -3,8 +3,8 @@
 module Orchestrators
   module Payment
     class EmissionOrchestrator < Base
-
       private
+
       def select_integration(provider)
         case provider
         when :pag_seguro
