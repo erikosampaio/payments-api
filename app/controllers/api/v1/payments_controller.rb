@@ -21,6 +21,21 @@ module Api
 
       # POST /payments
       def create
+        @payment = Payment.new(permitted_params.merge(status: :pending))
+
+        if @payment.save
+          result = Payments::Emission.new(@payment, permitted_params).call
+
+          if result[:success]
+            render json: { message: result[:message], data: result[:data] }
+            return
+          end
+
+          render json: { message: result[:message] }, status: :unprocessable_entity
+          return
+        end
+
+        render json: { message: @payment.errors.full_messages.to_sentence }, status: :unprocessable_entity
       end
 
       private
