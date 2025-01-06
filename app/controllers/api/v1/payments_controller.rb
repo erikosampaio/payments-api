@@ -5,12 +5,18 @@ module Api
 
       # GET /payments
       def index
-        render json: { payments: Payment.order(created_at: :desc) }
+        render json: {
+          data: Payment.order(created_at: :desc).map { |payment|
+            PaymentSerializer.new(payment).serializable_hash[:data][:attributes]
+          }
+        }
       end
 
       # GET /payments/1
       def show
-        render json: { payment: @payment }
+        render json: {
+          data: PaymentSerializer.new(@payment).serializable_hash[:data][:attributes]
+        }
       end
 
       # POST /payments
