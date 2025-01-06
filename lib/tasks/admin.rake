@@ -8,7 +8,8 @@ namespace :admin do
         number: Faker::Number.number(digits: 16),
         due_date: Faker::Date.forward(days: 30),
         cvc: Faker::Number.number(digits: 3),
-        amount: Faker::Number.decimal(l_digits: 2)
+        amount: Faker::Number.decimal(l_digits: 2),
+        status: [0, 1].sample
       )
     end
     p 'Payments generated successfully!'
