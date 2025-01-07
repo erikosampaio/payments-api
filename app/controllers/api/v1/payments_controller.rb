@@ -5,18 +5,16 @@ module Api
 
       # GET /payments
       def index
-        render json: {
-          data: Payment.order(created_at: :desc).map { |payment|
-            PaymentSerializer.new(payment).serializable_hash[:data][:attributes]
-          }
+        payments = Payment.order(created_at: :desc).map { |payment|
+          PaymentSerializer.new(payment).serializable_hash[:data][:attributes]
         }
+
+        render(json: { data: payments }, status: :ok)
       end
 
       # GET /payments/1
       def show
-        render json: {
-          data: PaymentSerializer.new(@payment).serializable_hash[:data][:attributes]
-        }
+        render(json: { data: PaymentSerializer.new(@payment).serializable_hash[:data][:attributes] }, status: :ok)
       end
 
       # POST /payments
@@ -27,15 +25,15 @@ module Api
           result = Payments::Emission.new(@payment, permitted_params).call
 
           if result[:success]
-            render json: { message: result[:message], data: result[:data] }
+            render(json: { message: result[:message], data: result[:data] }, status: :created)
             return
           end
 
-          render json: { message: result[:message] }, status: :unprocessable_entity
+          render(json: { message: result[:message] }, status: :unprocessable_entity)
           return
         end
 
-        render json: { message: @payment.errors.full_messages.to_sentence }, status: :unprocessable_entity
+        render(json: { message: @payment.errors.full_messages.to_sentence }, status: :unprocessable_entity)
       end
 
       private
