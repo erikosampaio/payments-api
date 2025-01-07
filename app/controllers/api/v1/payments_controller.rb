@@ -1,6 +1,7 @@
 module Api
   module V1
     class PaymentsController < ApplicationController
+      before_action :authenticate_user!, except: [:create]
       before_action :set_payment, only: [:show]
 
       # GET /payments
