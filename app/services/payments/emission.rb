@@ -1,12 +1,13 @@
 module Payments
   class Emission
-    def initialize(payment)
+    def initialize(payment, providers)
       @payment = payment
+      @providers = providers
       @messages = []
     end
 
     def call
-      Payment.providers.each do |provider|
+      @providers.each do |provider|
         orchestrator = Orchestrators::Payment::EmissionOrchestrator.new(params.merge(provider: provider))
         result = orchestrator.call
 
@@ -14,7 +15,7 @@ module Payments
           @payment.update!(status: :paid)
           return { success: true, message: "Payment created successfully with #{provider.to_s.humanize}.", data: result[:data] }
         else
-          @messages << "Error with #{provider.to_s.humanize}: #{result[:errors]}"
+          @messages << "Error with provider #{provider.to_s.humanize}: #{result[:errors]}"
         end
       end
 

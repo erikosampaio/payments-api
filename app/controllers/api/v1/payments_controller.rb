@@ -23,7 +23,7 @@ module Api
         @payment = Payment.new(permitted_params.merge(status: :pending))
 
         if @payment.save
-          result = Payments::Emission.new(@payment).call
+          result = Payments::Emission.new(@payment, Payment.providers).call
 
           if result[:success]
             render(json: { message: result[:message], data: result[:data] }, status: :created)
