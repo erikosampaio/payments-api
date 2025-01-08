@@ -17,6 +17,7 @@ RSpec.configure do |config|
   ]
 
   config.include FactoryBot::Syntax::Methods
+  config.include Shoulda::Matchers::ActiveModel, type: :model
   config.use_transactional_fixtures = true
   config.use_active_record = false
   config.infer_spec_type_from_file_location!

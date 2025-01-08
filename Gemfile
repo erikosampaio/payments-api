@@ -48,6 +48,7 @@ group :development, :test do
   gem "pry-rails"
   gem "awesome_print"
   gem "faker"
+  gem 'shoulda-matchers', '~> 5.0'
 end
 
 group :development do
