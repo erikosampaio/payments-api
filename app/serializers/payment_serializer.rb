@@ -1,6 +1,6 @@
 class PaymentSerializer
   include JSONAPI::Serializer
-  attributes :name, :number, :amount, :status
+  attributes :id, :name, :number, :amount, :status
 
   attribute :number do |object|
     object.number[-4..-1]

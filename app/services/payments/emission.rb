@@ -1,14 +1,13 @@
 module Payments
   class Emission
-    def initialize(payment, params)
+    def initialize(payment)
       @payment = payment
-      @params = params
       @messages = []
     end
 
     def call
-      [:pag_seguro, :mercado_pago].each do |provider|
-        orchestrator = Orchestrators::Payment::EmissionOrchestrator.new(@params.merge(provider: provider))
+      Payment.providers.each do |provider|
+        orchestrator = Orchestrators::Payment::EmissionOrchestrator.new(params.merge(provider: provider))
         result = orchestrator.call
 
         if result[:success]
@@ -20,6 +19,11 @@ module Payments
       end
 
       { success: false, message: @messages.join(' ') }
+    end
+
+    private
+    def params
+      @payment.attributes.slice('name', 'number', 'due_date', 'cvc', 'amount').transform_keys(&:to_sym)
     end
   end
 end

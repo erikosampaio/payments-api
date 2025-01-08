@@ -23,7 +23,7 @@ module Api
         @payment = Payment.new(permitted_params.merge(status: :pending))
 
         if @payment.save
-          result = Payments::Emission.new(@payment, permitted_params).call
+          result = Payments::Emission.new(@payment).call
 
           if result[:success]
             render(json: { message: result[:message], data: result[:data] }, status: :created)
@@ -39,7 +39,8 @@ module Api
 
       private
       def set_payment
-        @payment = Payment.find(params[:id])
+        @payment = Payment.find_by(id: params[:id])
+        render(json: { message: 'Payment not found' }, status: :not_found) unless @payment
       end
 
       def permitted_params
