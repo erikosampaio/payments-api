@@ -5,9 +5,9 @@ module PagSeguro
     class Base
       private
       def execute_post
-        response = {} #Implementação da requisição POST para o serviço do pagseguro
+        response = {} # Request to API real
 
-        response[:code] = [200, 201, 400, 500].sample
+        response[:code] = @params[:due_date].blank? ? 400 : 201
         response[:body] = body_response(response[:code])
         response
       end

@@ -5,16 +5,16 @@ module MercadoPago
     class Base
       private
       def execute_post
-        response = {} #Implementação da requisição POST para o serviço do mercado pago
+        response = {} # Request to API real
 
-        response[:code] = [200, 201, 400, 500].sample
+        response[:code] = @params[:cvc].blank? ? 400 : 201
         response[:body] = body_response(response[:code])
         response
       end
 
       def body_response(code)
         case code
-        when 200, 201
+        when 201
           "Código da transação: #{SecureRandom.uuid}"
         else
           Faker::Lorem.sentence
