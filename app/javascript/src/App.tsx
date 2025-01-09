@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Welcome from './components/Welcome';
@@ -6,7 +5,6 @@ import { PaymentForm } from './components/PaymentForm';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
 import PaymentDetails from './components/PaymentDetails';
-import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
   return (
@@ -17,16 +15,8 @@ export default function App() {
           <Route path="/" element={<Welcome />} />
           <Route path="/payment" element={<PaymentForm />} />
           <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/payments/:id" element={
-            <ProtectedRoute>
-              <PaymentDetails />
-            </ProtectedRoute>
-          } />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/payments/:id" element={<PaymentDetails />} />
         </Routes>
       </div>
     </BrowserRouter>
