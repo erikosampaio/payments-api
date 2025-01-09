@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { CreditCard, ShieldCheck } from 'lucide-react';
 
@@ -12,7 +11,7 @@ export default function Welcome() {
         <p className="text-xl text-gray-600 mb-12">
           Choose your destination below
         </p>
-        
+
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           <Link
             to="/payment"
@@ -28,9 +27,9 @@ export default function Welcome() {
               </p>
             </div>
           </Link>
-          
+
           <Link
-            to="/admin"
+            to={ localStorage.getItem('authToken') ? '/admin/dashboard' : '/admin' }
             className="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
           >
             <div className="flex flex-col items-center">
