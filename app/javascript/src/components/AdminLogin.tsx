@@ -7,7 +7,7 @@ interface LocationState {
 }
 
 export default function AdminLogin() {
-  const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [credentials, setCredentials] = useState({ user: { email: '', password: '' } });
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
@@ -18,18 +18,20 @@ export default function AdminLogin() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:3000/auth/login', {
+      const response = await fetch('http://localhost:3001/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
-        body: JSON.stringify(credentials),
+        body: JSON.stringify({ user: { ...credentials.user } }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('authToken', data.token);
+        const token = response.headers.get('Authorization');
+        if (token) { localStorage.setItem('authToken', token.replace('Bearer ', '')); }
         navigate('/admin/dashboard');
       } else {
         setError(data.message || 'Authentication failed');
@@ -60,8 +62,8 @@ export default function AdminLogin() {
             </label>
             <input
               type="email"
-              value={credentials.email}
-              onChange={(e) => setCredentials(prev => ({ ...prev, email: e.target.value }))}
+              value={credentials.user.email}
+              onChange={(e) => setCredentials(prev => ({ ...prev, user: { ...prev.user, email: e.target.value } }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -73,8 +75,8 @@ export default function AdminLogin() {
             </label>
             <input
               type="password"
-              value={credentials.password}
-              onChange={(e) => setCredentials(prev => ({ ...prev, password: e.target.value }))}
+              value={credentials.user.password}
+              onChange={(e) => setCredentials(prev => ({ ...prev, user: { ...prev.user, password: e.target.value } }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
