@@ -1,24 +1,61 @@
-# README
+# Payment API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Uma API Rails moderna para processamento de pagamentos, oferecendo endpoints RESTful seguros e eficientes.
 
-Things you may want to cover:
+## Tecnologias Principais
 
-* Ruby version
+- Ruby 3.2.2
+- Rails 7.x
+- PostgreSQL
+- RSpec para testes
 
-* System dependencies
+## Configuração
 
-* Configuration
+1. Clone o repositório
+```bash
+git clone [repository-url]
+cd payments-api
+```
 
-* Database creation
+2. Instale as dependências
+```bash
+bundle install
+```
 
-* Database initialization
+3. Configure o banco de dados
+```bash
+rails db:create
+rails db:migrate
+```
 
-* How to run the test suite
+## Executando a Aplicação
 
-* Services (job queues, cache servers, search engines, etc.)
+```bash
+rails server
+```
 
-* Deployment instructions
+A API estará disponível em `http://localhost:3001`
 
-* ...
+## Testes
+
+Execute a suite de testes com:
+```bash
+rspec
+```
+
+## Endpoints Principais
+
+- `POST /api/v1/payments` - Criar novo pagamento
+- `GET /api/v1/payments` - Listar pagamentos
+- `GET /api/v1/payments/:id` - Detalhes do pagamento
+- `DELETE /api/v1/payments/:id` - Cancelar pagamento
+
+- `POST /login` - Autenticar usuário
+- `POST /logout` - Deslogar usuário
+
+## Docker
+
+Para executar com Docker:
+```bash
+docker-compose up --build
+```
