@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { CreditCard } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface PaymentFormData {
-  cardholderName: string;
-  cardNumber: string;
-  expiryDate: string;
-  cvv: string;
+  name: string;
+  number: string;
+  due_date: string;
+  cvc: string;
+  amount: number;
 }
 
 const SAMPLE_PRODUCT = {
@@ -15,11 +17,16 @@ const SAMPLE_PRODUCT = {
 
 export function PaymentForm() {
   const [formData, setFormData] = useState<PaymentFormData>({
-    cardholderName: '',
-    cardNumber: '',
-    expiryDate: '',
-    cvv: ''
+    name: '',
+    number: '',
+    due_date: '',
+    cvc: '',
+    amount: SAMPLE_PRODUCT.price
   });
+
+  const [error, setError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -29,10 +36,39 @@ export function PaymentForm() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Payment processing will be implemented in the next module
-    console.log('Processing payment:', formData);
+
+    try {
+      const response = await fetch('http://localhost:3001/api/v1/payments', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          number: formData.number,
+          due_date: formData.due_date,
+          cvc: formData.cvc,
+          amount: SAMPLE_PRODUCT.price
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSuccessMessage(data.message || 'Payment created successfully!');
+        setFormData({ name: '', number: '', due_date: '', cvc: '', amount: SAMPLE_PRODUCT.price });
+        setTimeout(() => {
+          navigate('/');
+        }, 1500);
+      } else {
+        const data = await response.json();
+        setError(data.message || 'Failed to create payment.');
+      }
+    } catch (err) {
+      setError('Network error. Please try again.');
+    }
   };
 
   return (
@@ -48,6 +84,17 @@ export function PaymentForm() {
           <p className="text-2xl font-bold text-blue-600">${SAMPLE_PRODUCT.price}</p>
         </div>
 
+        {successMessage && (
+          <div className="mb-4 p-4 bg-green-100 text-green-800 rounded-md">
+            {successMessage}
+          </div>
+        )}
+        {error && (
+          <div className="mb-4 p-4 bg-red-100 text-red-800 rounded-md">
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -55,8 +102,8 @@ export function PaymentForm() {
             </label>
             <input
               type="text"
-              name="cardholderName"
-              value={formData.cardholderName}
+              name="name"
+              value={formData.name}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
@@ -69,8 +116,8 @@ export function PaymentForm() {
             </label>
             <input
               type="text"
-              name="cardNumber"
-              value={formData.cardNumber}
+              name="number"
+              value={formData.number}
               onChange={handleInputChange}
               maxLength={16}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -85,28 +132,26 @@ export function PaymentForm() {
               </label>
               <input
                 type="text"
-                name="expiryDate"
-                value={formData.expiryDate}
+                name="due_date"
+                value={formData.due_date}
                 onChange={handleInputChange}
-                placeholder="MM/YY"
+                placeholder="MM-YY"
                 maxLength={5}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                CVV
+                cvc
               </label>
               <input
                 type="text"
-                name="cvv"
-                value={formData.cvv}
+                name="cvc"
+                value={formData.cvc}
                 onChange={handleInputChange}
-                maxLength={4}
+                maxLength={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
               />
             </div>
           </div>
