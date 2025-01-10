@@ -100,7 +100,7 @@ export default function AdminDashboard() {
               <tfoot className="bg-gray-50">
                 <tr>
                   <th colSpan={2} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th colSpan={3} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     ${payments.reduce((acc, payment) => acc + payment.amount, 0).toFixed(2)}
                   </th>
                 </tr>
