@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Table, FileText, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-
 interface Payment {
   id: number;
   name: string;
@@ -24,7 +23,7 @@ export default function AdminDashboard() {
           return null;
         }
 
-        const response = await fetch('http://localhost:3001/api/v1/payments', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/payments`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`,

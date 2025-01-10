@@ -40,7 +40,7 @@ export function PaymentForm() {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:3001/api/v1/payments', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/payments`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
